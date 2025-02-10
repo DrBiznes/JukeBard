@@ -13,7 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 public class ClientMusicHandler {
     private static JukebardMovingSound currentSound;
 
-    public static void playMusic(ResourceLocation soundId) {
+    public static void playMusic(ResourceLocation soundId, double x, double y, double z) {
         Minecraft mc = Minecraft.getInstance();
         if (mc.player == null) return;
 
@@ -23,7 +23,7 @@ public class ClientMusicHandler {
 
         SoundEvent sound = BuiltInRegistries.SOUND_EVENT.get(soundId);
         if (sound != null) {
-            currentSound = new JukebardMovingSound(mc.player, sound);
+            currentSound = new JukebardMovingSound(x, y, z, sound);
             mc.getSoundManager().play(currentSound);
         }
     }

@@ -7,6 +7,7 @@ import me.jamino.jukebard.network.StopMusicPacket;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -59,21 +60,36 @@ public class HandheldJukebox extends Item {
             if (offhandStack.getItem() instanceof RecordItem musicDisc) {
                 // Stop current music if playing
                 if (!currentDisc.isEmpty()) {
-                    Jukebard.NETWORK.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new StopMusicPacket());
+                    // Send stop packet to all nearby players
+                    for (ServerPlayer nearbyPlayer : ((ServerLevel)level).getPlayers(p ->
+                            p.distanceToSqr(player) <= JukebardConfig.MUSIC_RANGE.get() * JukebardConfig.MUSIC_RANGE.get())) {
+                        Jukebard.NETWORK.send(PacketDistributor.PLAYER.with(() -> nearbyPlayer),
+                                new StopMusicPacket());
+                    }
                 }
 
                 // Store and play the new disc
                 setCurrentDisc(jukeboxStack, offhandStack.copy());
-                Jukebard.NETWORK.send(PacketDistributor.PLAYER.with(() -> serverPlayer),
-                        new PlayMusicPacket(musicDisc.getSound().getLocation()));
+
+                // Send play packet to all nearby players
+                for (ServerPlayer nearbyPlayer : ((ServerLevel)level).getPlayers(p ->
+                        p.distanceToSqr(player) <= JukebardConfig.MUSIC_RANGE.get() * JukebardConfig.MUSIC_RANGE.get())) {
+                    Jukebard.NETWORK.send(PacketDistributor.PLAYER.with(() -> nearbyPlayer),
+                            new PlayMusicPacket(musicDisc.getSound().getLocation(),
+                                    player.getX(), player.getY(), player.getZ()));
+                }
 
                 // Consume the disc if in survival
                 if (!player.getAbilities().instabuild) {
                     offhandStack.shrink(1);
                 }
             } else if (!currentDisc.isEmpty()) {
-                // Stop music and return disc
-                Jukebard.NETWORK.send(PacketDistributor.PLAYER.with(() -> serverPlayer), new StopMusicPacket());
+                // Stop music and return disc for all nearby players
+                for (ServerPlayer nearbyPlayer : ((ServerLevel)level).getPlayers(p ->
+                        p.distanceToSqr(player) <= JukebardConfig.MUSIC_RANGE.get() * JukebardConfig.MUSIC_RANGE.get())) {
+                    Jukebard.NETWORK.send(PacketDistributor.PLAYER.with(() -> nearbyPlayer),
+                            new StopMusicPacket());
+                }
 
                 if (!player.getAbilities().instabuild) {
                     if (!player.getInventory().add(currentDisc)) {

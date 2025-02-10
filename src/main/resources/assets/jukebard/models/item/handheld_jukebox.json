@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "jukebard:item/handheld_jukebox"
+    "layer0": "jukebard:item/bony_block_empty"
   }
 }
