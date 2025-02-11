@@ -35,7 +35,7 @@ public class HandheldJukebox extends Item {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
         super.appendHoverText(stack, level, tooltip, flag);
 
-        tooltip.add(Component.literal("A mystical jukebox made of bones")
+        tooltip.add(Component.literal("A portable music player")
                 .withStyle(ChatFormatting.GRAY));
         tooltip.add(Component.literal("Right-click with a music disc to play")
                 .withStyle(ChatFormatting.DARK_GRAY));
@@ -71,12 +71,11 @@ public class HandheldJukebox extends Item {
                 // Store and play the new disc
                 setCurrentDisc(jukeboxStack, offhandStack.copy());
 
-                // Send play packet to all nearby players
+                // Send play packet to all nearby players with the source player's UUID
                 for (ServerPlayer nearbyPlayer : ((ServerLevel)level).getPlayers(p ->
                         p.distanceToSqr(player) <= JukebardConfig.MUSIC_RANGE.get() * JukebardConfig.MUSIC_RANGE.get())) {
                     Jukebard.NETWORK.send(PacketDistributor.PLAYER.with(() -> nearbyPlayer),
-                            new PlayMusicPacket(musicDisc.getSound().getLocation(),
-                                    player.getX(), player.getY(), player.getZ()));
+                            new PlayMusicPacket(musicDisc.getSound().getLocation(), player.getUUID()));
                 }
 
                 // Consume the disc if in survival

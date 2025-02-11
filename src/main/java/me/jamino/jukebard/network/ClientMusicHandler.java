@@ -8,14 +8,19 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.player.Player;
+import java.util.UUID;
 
 @OnlyIn(Dist.CLIENT)
 public class ClientMusicHandler {
     private static JukebardMovingSound currentSound;
 
-    public static void playMusic(ResourceLocation soundId, double x, double y, double z) {
+    public static void playMusic(ResourceLocation soundId, UUID playerUUID) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null) return;
+        if (mc.level == null) return;
+
+        Player sourcePlayer = mc.level.getPlayerByUUID(playerUUID);
+        if (sourcePlayer == null) return;
 
         if (currentSound != null) {
             stopMusic();
@@ -23,7 +28,7 @@ public class ClientMusicHandler {
 
         SoundEvent sound = BuiltInRegistries.SOUND_EVENT.get(soundId);
         if (sound != null) {
-            currentSound = new JukebardMovingSound(x, y, z, sound);
+            currentSound = new JukebardMovingSound(sourcePlayer, sound);
             mc.getSoundManager().play(currentSound);
         }
     }
