@@ -2,6 +2,7 @@ package me.jamino.jukebard.items;
 
 import me.jamino.jukebard.Jukebard;
 import me.jamino.jukebard.JukebardConfig;
+import me.jamino.jukebard.client.ClientEvents;
 import me.jamino.jukebard.network.PlayMusicPacket;
 import me.jamino.jukebard.network.StopMusicPacket;
 import net.minecraft.core.particles.ParticleTypes;
@@ -146,14 +147,19 @@ public class HandheldJukebox extends Item {
     @OnlyIn(Dist.CLIENT)
     public void registerModelProperties() {
         ItemProperties.register(this, new ResourceLocation(Jukebard.MODID, "has_record"),
-                (stack, level, entity, seed) -> getCurrentDisc(stack).isEmpty() ? 0.0F : 1.0F);
-    }
-
-    public ResourceLocation getCurrentRecordId(ItemStack stack) {
-        ItemStack disc = getCurrentDisc(stack);
-        if (!disc.isEmpty()) {
-            return ForgeRegistries.ITEMS.getKey(disc.getItem());
-        }
-        return null;
+                (stack, level, entity, seed) -> {
+                    ItemStack currentDisc = getCurrentDisc(stack);
+                    if (!currentDisc.isEmpty()) {
+                        ResourceLocation recordId = ForgeRegistries.ITEMS.getKey(currentDisc.getItem());
+                        if (recordId != null) {
+                            ResourceLocation overlayLocation = ClientEvents.OVERLAY_MANAGER.getOverlayTexture(recordId);
+                            // If we have a valid overlay, return 1 to use the record model
+                            if (overlayLocation != null) {
+                                return 1.0F;
+                            }
+                        }
+                    }
+                    return 0.0F;
+                });
     }
 }
