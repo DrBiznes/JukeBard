@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "jukebard:item/handheld_jukebox",
+    "layer1": "jukebard:item/overlay/modded"
+  }
+}

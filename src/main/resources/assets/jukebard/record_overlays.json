@@ -1,0 +1,18 @@
+{
+  "minecraft:music_disc_13": "jukebard:item/overlay/disc_13",
+  "minecraft:music_disc_cat": "jukebard:item/overlay/disc_cat",
+  "minecraft:music_disc_blocks": "jukebard:item/overlay/disc_blocks",
+  "minecraft:music_disc_chirp": "jukebard:item/overlay/disc_chirp",
+  "minecraft:music_disc_far": "jukebard:item/overlay/disc_far",
+  "minecraft:music_disc_mall": "jukebard:item/overlay/disc_mall",
+  "minecraft:music_disc_mellohi": "jukebard:item/overlay/disc_mellohi",
+  "minecraft:music_disc_stal": "jukebard:item/overlay/disc_stal",
+  "minecraft:music_disc_strad": "jukebard:item/overlay/disc_strad",
+  "minecraft:music_disc_ward": "jukebard:item/overlay/disc_ward",
+  "minecraft:music_disc_11": "jukebard:item/overlay/disc_11",
+  "minecraft:music_disc_wait": "jukebard:item/overlay/disc_wait",
+  "minecraft:music_disc_otherside": "jukebard:item/overlay/disc_otherside",
+  "minecraft:music_disc_5": "jukebard:item/overlay/disc_5",
+  "minecraft:music_disc_pigstep": "jukebard:item/overlay/disc_pigstep",
+  "minecraft:music_disc_relic": "jukebard:item/overlay/disc_relic"
+}

@@ -19,7 +19,12 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.ChatFormatting;
 import net.minecraft.util.RandomSource;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -136,5 +141,19 @@ public class HandheldJukebox extends Item {
     @Override
     public boolean isFoil(ItemStack stack) {
         return !getCurrentDisc(stack).isEmpty() || super.isFoil(stack);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    public void registerModelProperties() {
+        ItemProperties.register(this, new ResourceLocation(Jukebard.MODID, "has_record"),
+                (stack, level, entity, seed) -> getCurrentDisc(stack).isEmpty() ? 0.0F : 1.0F);
+    }
+
+    public ResourceLocation getCurrentRecordId(ItemStack stack) {
+        ItemStack disc = getCurrentDisc(stack);
+        if (!disc.isEmpty()) {
+            return ForgeRegistries.ITEMS.getKey(disc.getItem());
+        }
+        return null;
     }
 }

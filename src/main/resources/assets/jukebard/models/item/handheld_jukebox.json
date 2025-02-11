@@ -1,6 +1,15 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "jukebard:item/bony_block_empty"
-  }
+    "layer0": "jukebard:item/handheld_jukebox",
+    "layer1": "jukebard:item/overlay/empty"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "jukebard:has_record": 1
+      },
+      "model": "jukebard:item/handheld_jukebox_record"
+    }
+  ]
 }
